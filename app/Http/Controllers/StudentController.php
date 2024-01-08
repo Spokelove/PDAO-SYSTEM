@@ -1,17 +1,39 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\typesdisability;
-use App\Models\Students;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\Rule;
-use App\Models\devices;
+use App\Models\EducationalAttainment;
+use App\Models\Purok;
+use App\Models\Barangay;
+use App\Models\Municipality;
+use App\Models\statusEmployment;
+use App\Models\CategoryEmployment;
+use App\Models\typeEmployment;
+use App\Models\Occupation;
+use App\Models\registration;
 use App\Models\residence;
-use App\Models\pwdmember;
+use Illuminate\Support\Facades\DB;
+use App\Models\Pwdmember;
+use App\Models\familyback;
+use App\Models\organizationaccomp;
+use App\Models\approvingofficer;
+use App\Models\approvingsection;
+use App\Models\typesdisability;
 use App\Models\causedisability;
-use Carbon\Carbon;
-use Carbon\ids;
+use App\Models\Profilling;
+use App\Models\devices;
+use App\Models\id;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\PwdMemberExport; // Palitan ang 'YourExportClass' ng eksaktong pangalan ng iyong export class
+use App\Exports\listperBarangayExport;
+use Carbon\Carbon; // Import the Carbon library
+use App\Models\Puroks;
+
+
+
+
+
+
 class StudentController extends Controller
 
 {
@@ -20,39 +42,130 @@ class StudentController extends Controller
 
     {
 
-    
+        
+        $attainments = EducationalAttainment::all();
+        $puroks = Purok::all();
+        $barangays = Barangay::all();
+        $municipalities = Municipality::all();
+        $employments = StatusEmployment::all();
+        $categorys = CategoryEmployment::all();
+        $types =typeEmployment::all();
+        $occupations =Occupation::all();
 
         // / Total of all members
-        $totalMembers = Pwdmember::count();
+        // $totalMembers = Pwdmember::count();
+        $totalMembers = Pwdmember::where(function ($query) {
+            $query->whereDoesntHave('approvingsection', function ($subQuery) {
+                $subQuery->where('middle_name_of_reporting_unit', 'Deceased');
+            })->orWhereHas('approvingsection', function ($subQuery) {
+                $subQuery->where('middle_name_of_reporting_unit', '!=', 'Deceased')
+                    ->whereNotNull('middle_name_of_reporting_unit');
+            });
+        })
+        ->count();
+    
         // <grand total of female and male>
-                $genderCounts = DB::table('pwd_member')
-            ->select('gender', DB::raw('COUNT(*) AS count'))
-            ->groupBy('gender')
-            ->get();
+        //         $genderCounts = DB::table('pwd_member')
+        //     ->select('gender', DB::raw('COUNT(*) AS count'))
+        //     ->groupBy('gender')
+        //     ->get();
 
+        // $smaleCount = $genderCounts->where('gender', 'Male')->first()->count ?? 0;
+        // $sfemaleCount = $genderCounts->where('gender', 'Female')->first()->count ?? 0;
+//    <TOTAL==OF PWD MEMBER===================================================================================>
+
+
+        $totalMembers = Pwdmember::where(function ($query) {
+            $query->whereDoesntHave('approvingsection', function ($subQuery) {
+                $subQuery->where('middle_name_of_reporting_unit', 'Deceased');
+            })->orWhereHas('approvingsection', function ($subQuery) {
+                $subQuery->where('middle_name_of_reporting_unit', '!=', 'Deceased')
+                    ->whereNotNull('middle_name_of_reporting_unit');
+            });
+        })->count();
+
+        $genderCounts = Pwdmember::where(function ($query) {
+            $query->whereDoesntHave('approvingsection', function ($subQuery) {
+                $subQuery->where('middle_name_of_reporting_unit', 'Deceased');
+            })->orWhereHas('approvingsection', function ($subQuery) {
+                $subQuery->where('middle_name_of_reporting_unit', '!=', 'Deceased')
+                    ->whereNotNull('middle_name_of_reporting_unit');
+            });
+        })
+        ->select('gender', DB::raw('COUNT(*) AS count'))
+        ->groupBy('gender')
+        ->get();
+        
         $smaleCount = $genderCounts->where('gender', 'Male')->first()->count ?? 0;
         $sfemaleCount = $genderCounts->where('gender', 'Female')->first()->count ?? 0;
+        
+
+
+
 
     // ================================================================================================
 
+    // $application = $request->input('application', 'new'); // Default to 'new' if no value is selected
+
+    // $totalNew = Pwdmember::where('application', 'new')->count();
+    // $totalRenewal = Pwdmember::where('application', 'renewal')->count();
+    // $totalTransfer = Pwdmember::where('application', 'transfer')->count(); // Corrected variable name
+    // // Define your date range
+    // $startDate = Carbon::now()->subMonths(3); // Change the date range as needed
+    // $endDate = Carbon::now();
+
+    // // Count male and female new applicants within the date range
+    // $femaleCountNewApplicants = Pwdmember::where('gender', 'Female')
+    //     ->whereBetween('created_at', [$startDate, $endDate])
+    //     ->count();
+
+    // $maleCountNewApplicants = Pwdmember::where('gender', 'Male')
+    //     ->whereBetween('created_at', [$startDate, $endDate])
+    //     ->count();
     $application = $request->input('application', 'new'); // Default to 'new' if no value is selected
 
-    $totalNew = Pwdmember::where('application', 'new')->count();
-    $totalRenewal = Pwdmember::where('application', 'renewal')->count();
-    $totalTransfer = Pwdmember::where('application', 'transfer')->count(); // Corrected variable name
+    $totalNew = Pwdmember::where('application', 'new')
+        ->where('status', '!=', 'Deceased')
+        ->whereHas('approvingsection', function ($query) {
+            $query->where('middle_name_of_reporting_unit', '!=', 'Deceased');
+        })
+        ->count();
+    
+    $totalRenewal = Pwdmember::where('application', 'renewal')
+        ->where('status', '!=', 'Deceased')
+        ->whereHas('approvingsection', function ($query) {
+            $query->where('middle_name_of_reporting_unit', '!=', 'Deceased');
+        })
+        ->count();
+    
+    $totalTransfer = Pwdmember::where('application', 'transfer')
+        ->where('status', '!=', 'Deceased')
+        ->whereHas('approvingsection', function ($query) {
+            $query->where('middle_name_of_reporting_unit', '!=', 'Deceased');
+        })
+        ->count();
+    
     // Define your date range
     $startDate = Carbon::now()->subMonths(3); // Change the date range as needed
     $endDate = Carbon::now();
+    
+                        // Count male and female new applicants within the date range, excluding deceased
+            $femaleCountNewApplicants = Pwdmember::where('gender', 'Female')
+            ->whereDoesntHave('approvingsection', function ($query) {
+                $query->where('middle_name_of_reporting_unit', 'Deceased');
+            })
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->count();
 
-    // Count male and female new applicants within the date range
-    $femaleCountNewApplicants = Pwdmember::where('gender', 'Female')
-        ->whereBetween('created_at', [$startDate, $endDate])
-        ->count();
+            $maleCountNewApplicants = Pwdmember::where('gender', 'Male')
+            ->whereDoesntHave('approvingsection', function ($query) {
+                $query->where('middle_name_of_reporting_unit', 'Deceased');
+            })
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->count();
 
-    $maleCountNewApplicants = Pwdmember::where('gender', 'Male')
-        ->whereBetween('created_at', [$startDate, $endDate])
-        ->count();
 
+    
 // ======================below 18===================================================================
 
 $totalBelow18 = DB::table('pwd_member')
@@ -186,33 +299,98 @@ $sixtyAbove = Pwdmember::where('age', '>=', 60)->count();
     // ========================= Devices============================================================================
     // Now you have counts for male and female applicants for each application type
 
-    $totalDevicesCount = Devices::count();
+    // $totalDevicesCount = Devices::where('device_given', '<>', 'none')->count();
+    // $totalDevicesCount= Devices::whereJsonDoesntContain('device_given', '["none"]')->count();
 
-    $maleDeviceGivenCount = Devices::join('pwd_member', 'devices_given.pwdmember_id', '=', 'pwd_member.id')
+
+    $totalDevicesCount = Devices::where('device_given', '<>', '["none"]')->count();
+
+
+    // $maleDeviceGivenCount = Devices::join('pwd_member', 'devices_given.pwdmember_id', '=', 'pwd_member.id')
+    // ->where('pwd_member.gender', 'Male')
+    // ->count();
+
+    $maleDeviceGivenCount = DB::table('devices_given')
+    ->join('pwd_member', 'devices_given.pwdmember_id', '=', 'pwd_member.id')
     ->where('pwd_member.gender', 'Male')
+    ->whereNotExists(function ($query) {
+        $query->select(DB::raw(1))
+            ->from('devices_given as dg')
+            ->whereRaw('JSON_CONTAINS(dg.device_given, ?)', ['["none"]'])
+            ->whereRaw('dg.pwdmember_id = pwd_member.id');
+    })
     ->count();
+
 
      // Bilangin ang mga babae na may devices
-      $femaleDeviceGivenCount = Devices::join('pwd_member', 'devices_given.pwdmember_id', '=', 'pwd_member.id')
+    //   $femaleDeviceGivenCount = Devices::join('pwd_member', 'devices_given.pwdmember_id', '=', 'pwd_member.id')
+    // ->where('pwd_member.gender', 'Female')
+    // ->count();
+
+    $femaleDeviceGivenCount = DB::table('devices_given')
+    ->join('pwd_member', 'devices_given.pwdmember_id', '=', 'pwd_member.id')
     ->where('pwd_member.gender', 'Female')
+    ->whereNotExists(function ($query) {
+        $query->select(DB::raw(1))
+            ->from('devices_given as dg')
+            ->whereRaw('JSON_CONTAINS(dg.device_given, ?)', ['["none"]'])
+            ->whereRaw('dg.pwdmember_id = pwd_member.id');
+    })
     ->count();
-
-
 
 //    ==========================cause of disability================================================================ 
 
-$totalCauseOfDisabilities = CauseDisability::selectRaw('COUNT(*) as total_cause_of_disabilities')
+$totalCauseOfDisabilities = causedisability::selectRaw('COUNT(*) as total_cause_of_disabilities')
     ->whereRaw('JSON_LENGTH(cause_of_disability) > 0')
     ->get()
     ->first()
     ->total_cause_of_disabilities;
 
-    $totalAutism = CauseDisability::whereJsonContains('cause_of_disability->1', 'Austim')->count();
+    $totalAutism = causedisability::whereJsonContains('cause_of_disability->1', 'Austim')->count();
 
+
+// ------------------austism-------------------------------------------------------
+
+$count = DB::table('causedisability')
+    ->where('cause_of_disability', ["Austim"])
+    ->count();
+
+
+    $count = Causedisability::where('cause_of_disability','["AUTISM"]')->count();
+
+// -------------------ADHD--,CEREBRAL , DOWN SYNDRON-------------------------------------------------------------------
+$adhdCount = Causedisability::where('cause_of_disability', '["ADHD"]')->count();
+$cerebralPalsyCount = Causedisability::where('cause_of_disability', '["CEREBRAL PALSY"]')->count();
+$downSyndromeCount = Causedisability::where('cause_of_disability', '["DOWN SYNDROME"]')->count();
+
+$totalCongenitalInbornCount = $adhdCount + $cerebralPalsyCount + $downSyndromeCount;
 // ========================================================================================================================  
+// Add counts for other causes
+$acquiredCount = causedisability::where('cause_of_disability', '["ACQUIRED"]')->count();
+$chronicIllnessCount = causedisability::where('cause_of_disability', '["CHRONIC ILLNES"]')->count();
+$injuryCount = causedisability::where('cause_of_disability', '["INJURY"]')->count();
+$otherSpecifyCount = causedisability::where('cause_of_disability', 'other specify')->count();
+
+// Calculate the total count
+$totalCongenitalInbornCount = $adhdCount + $cerebralPalsyCount + $downSyndromeCount +
+                              $acquiredCount + $chronicIllnessCount + $injuryCount + $otherSpecifyCount;
+
+// Now $totalCongenitalInbornCount contains the total count of records with the specified causes of disability.
+
+// =========================inborn male and female total==================================================================================================
+
+// 
+
+// You can then use $maleRecords and $femaleRecords as needed.
 
 
+// Now you have the total counts for congenital/inborn causes and the foreign key pwdmember_id for males and females.
 
+
+// Now you have the total counts for congenital/inborn causes and the counts for males and females.
+
+
+// ---------------------------------------------------------------------------------------------------------------------------------------
 {
     // Define the types and count them in your query
     $disabilityData = Causedisability::select(
@@ -260,7 +438,7 @@ $totalCauseOfDisabilities = CauseDisability::selectRaw('COUNT(*) as total_cause_
         //    $disabilityModel = new causedisability;
         //     $results = $disabilityModel->hydrate($disabilityData->toArray());
 
-        $totalAutism = CauseDisability::whereJsonContains('cause_of_disability->1', 'Austim')->count();
+$totalAutism = CauseDisability::whereJsonContains('cause_of_disability->1', 'Austim')->count();
 
 
         // dd($totalAutism);
@@ -276,7 +454,7 @@ $totalCauseOfDisabilities = CauseDisability::selectRaw('COUNT(*) as total_cause_
                     ->first()
                     ->total_types_of_disabilities;
 
-// -------------------------------------------------------------------------------------------------------
+// --------------------------------death record-----------------------------------------------------------------------
 
 
 
@@ -292,6 +470,9 @@ $totalCauseOfDisabilities = CauseDisability::selectRaw('COUNT(*) as total_cause_
 //     ->get();
 
 
+$totalDeceasedMembers = Pwdmember::whereHas('approvingsection', function ($query) {
+    $query->where('middle_name_of_reporting_unit', 'Deceased');
+})->count();
 
 
 
@@ -328,101 +509,115 @@ return view('students.index', compact(
      'totalFemaleBelow18',
      'totalMaleBelow18',
     //  'caused','
-    'totalAutism'
+    'totalAutism',
+    'count',
+    'adhdCount',
+    'cerebralPalsyCount',
+    'downSyndromeCount',
+    'totalCongenitalInbornCount',
+    'acquiredCount',
+    'chronicIllnessCount',
+    'injuryCount',
+    'otherSpecifyCount',
+    'totalDeceasedMembers'
+  
    
 
 ))->with(['results' => $results]);
 
 
- }
-    // Check a condition, for example, if $totalMembers is greater than 10
+   }
+
+}
+
+//     // Check a condition, for example, if $totalMembers is greater than 10
        
-            // Pass the totalMembers count to a different view
-            // return view('students.index', compact('totalMembers','totalNew','totalMembers'));
+//             // Pass the totalMembers count to a different view
+//             // return view('students.index', compact('totalMembers','totalNew','totalMembers'));
         
 
 
-public function show($id){
-    $data = Students::findorFail($id);
+// public function show($id){
+//     $data = Students::findorFail($id);
   
-       return view('students.edit',['student' => $data]);
+//        return view('students.edit',['student' => $data]);
 
-}
+// }
 
-public function create(){
-    return view('students.create')->with('title', 'Add New');
+// public function create(){
+//     return view('students.create')->with('title', 'Add New');
 
-}
+// }
 
-public function store(Request $request){
-    $validated = $request->validate([
-        "first_name" => ['required', 'min:4'],
-        "last_name" => ['required', 'min:4'],
-        "gender" => ['required'],
-        "age" => ['required'],
-        "email" => ['required', 'email', Rule::unique('students','email')],
+// public function store(Request $request){
+//     $validated = $request->validate([
+//         "first_name" => ['required', 'min:4'],
+//         "last_name" => ['required', 'min:4'],
+//         "gender" => ['required'],
+//         "age" => ['required'],
+//         "email" => ['required', 'email', Rule::unique('students','email')],
        
-  ]);
+//   ]);
 
-       Students::create($validated);
-      return  redirect('/')->with('message','New Student was added successfully!');
+//        Students::create($validated);
+//       return  redirect('/')->with('message','New Student was added successfully!');
       
-} 
-  public function update(Request $request, Students $student){
-        //   dd($request);
+// } 
+//   public function update(Request $request, Students $student){
+//         //   dd($request);
 
          
-    $validated = $request->validate([
-        "first_name" => ['required', 'min:4'],
-        "last_name" => ['required', 'min:4'],
-        "middle_name" => ['required', 'min:4'],
-        "suffix" => ['required'],
-        "gender" => ['required'],
-        "age" => ['required'],
-        "email" => ['required', 'email'],
+//     $validated = $request->validate([
+//         "first_name" => ['required', 'min:4'],
+//         "last_name" => ['required', 'min:4'],
+//         "middle_name" => ['required', 'min:4'],
+//         "suffix" => ['required'],
+//         "gender" => ['required'],
+//         "age" => ['required'],
+//         "email" => ['required', 'email'],
        
-  ]);
+//   ]);
 
 
 
-       $student->update($validated);
+//        $student->update($validated);
 
-    //   dd($request);
+//     //   dd($request);
 
-       return back()->with('message', 'Data Was successfully updated');
-  }
-
-
+//        return back()->with('message', 'Data Was successfully updated');
+//   }
 
 
-  public function destroy(Students $student){
-       $student->delete();
-       return redirect('/')->with('message', 'Data was successfully deleted');
-  }
-public function searchdata(Request $request)
-{  
-     dd($request);
-
-    // $query = $request->search;
-    // $student = Students::orderBy('first_name','DESC')->where('first_name','LIkE'.'%'.$query.'%')->paginate(10);
-    // return view('search',compact('students'));
-
-}
 
 
-//  public function cancel(Request $request,Students $student){
-//     return redirect('/');
-//  }
+//   public function destroy(Students $student){
+//        $student->delete();
+//        return redirect('/')->with('message', 'Data was successfully deleted');
+//   }
+// public function searchdata(Request $request)
+// {  
+//      dd($request);
+
+//     // $query = $request->search;
+//     // $student = Students::orderBy('first_name','DESC')->where('first_name','LIkE'.'%'.$query.'%')->paginate(10);
+//     // return view('search',compact('students'));
+
+// }
 
 
-}
+// //  public function cancel(Request $request,Students $student){
+// //     return redirect('/');
+// //  }
 
 
-      //$data = Students::where('age','<', '19')->orderBy ('first_name', 'asc')->limit(5)->get();
+// }
 
-//$data = DB::table('students')
-       // ->select(DB::raw('count(*) as gender_count,gender
-        //'))->groupBy('gender')->get();
 
-    //return view('students.index' ,['students' => $data]);
+//       //$data = Students::where('age','<', '19')->orderBy ('first_name', 'asc')->limit(5)->get();
+
+// //$data = DB::table('students')
+//        // ->select(DB::raw('count(*) as gender_count,gender
+//         //'))->groupBy('gender')->get();
+
+//     //return view('students.index' ,['students' => $data]);
 

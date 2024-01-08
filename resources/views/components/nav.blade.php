@@ -1,11 +1,12 @@
-<nav x-data="{open :false}"  class="bg-green-600 font-saref fixed w-full z-20 top-0 left-0 border-blue-gray-600 px-2 sm:px-4 class= py-2.5 text-stone-900">
+<nav x-data="{open :false}" class="bg-green-800 font-saref fixed w-full z-20 top-0 left-0 border-blue-gray-600 px-2 sm:px-4 py-2.5 text-stone-900 shadow-green-600">
+
   
     <div class="container flex flex-wrap justify-between items-center mx-auto">
-            <a href="/">
-{{--                
-                   <span class="self-center text-xl font=semibold whitespace-nowrap">
+            <a href="">
+               
+                   <span class="text-center text-xl font=semibold whitespace-nowrap text-white ">
                         {{$data['title'] }}
-                   </span>         --}}
+                   </span>         
                   <!-- <img src="{{url('/build/logo.png')}}" alt="..." class="   max-w-50 rounded h-10 w-10">  -->
                 
              <!-- <button @click= "open = !open"

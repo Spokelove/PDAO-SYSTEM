@@ -44,8 +44,8 @@
                             </button>
                           
                        <div class = "hidden md:block text-sm md:text-md text-black dark:text-white ">{{ Auth::user()->name }}</div> 
-
-                       <div class = "hidden md:block text-sm md:text-md text-black dark:text-white"></div> 
+<!-- 
+                       <div class = "hidden md:block text-sm md:text-md text-black dark:text-white"></div>  -->
     
                      <div x-show="dropdownOpen" @click="dropdownOpen = false" class="fixed inset-0 h-full w-full z-10"
                             style="display: none;"></div>

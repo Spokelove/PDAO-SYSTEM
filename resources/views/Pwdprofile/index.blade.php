@@ -3,24 +3,9 @@
 <?php  $array = array('title' => 'V-ABLE   SYSTEM') ;?>
   <x-nav :data="$array"/>
   
-<!-- 
-    <header class="max-w-lg mx-auto mt-1 ">
-           <a href="#">
-                    <div class=" bg-gray-00  text-8xl font-extrabold ">
-       
-                       <p class="font-sans  text-center text-2xl  text-black font-bold mb-4"> PERSONS WITH DISABILITY LIST</p>   
-                  </div>  
-           </a>
-         
 
 
-
-   </header>  -->
-
-<!-- 
-<div class="max-w-2xl mx-auto mt-10"> -->
-<!-- full tailwind config using javascript -->
-<!-- https://github.com/neurolinker/popice -->
+  <script src="../path/to/chartjs.min.js"></script>
 
 <body class = "body bg-lime-500 rounded-lg shadow-2xl dark:bg-[#0F172A]">
     <div class = " mt-2 fixed w-full z-30 flex bg-white-100 dark:bg-[#0F172A] p-2 items-center justify-center h-16 px-8">
@@ -28,22 +13,137 @@
             ADMIN
         </div>
         <!-- SPACER -->
+        <!-- SPACER -->
         <div class = "grow h-full flex items-center justify-center "></div>
-        <div class = "flex-none h-full text-center flex items-center justify-center">
-            
-                <div class = "flex space-x-3 items-center px-3 ">
-                    <div class = "flex-none flex justify-center">
-                    <div class="w-8 h-8 flex bg-white-100 rounded-lg shadow-2xl ">
-                          <img src="{{url('/build/logo.png')}}" alt="..." class="   max-w-50 rounded h-8 w-8"> 
-                    </div>
-                    </div>
+        <div class = "grow h-full flex items-center justify-center "></div>
 
-                    <div class = "hidden md:block text-sm md:text-md text-black dark:text-white">tweetybird</div>
-                </div>
-                
-        </div>
+
+
+<!-- ============================user log in================================================================================ -->
+
+
+<!-- 
+      <name of user> -->
+      <!-- <div class = "flex space-x-3 items-center px-3 ">
+
+        <div x-data="{ dropdownOpen: false }" class="relative">
+
+              <button @click="dropdownOpen = ! dropdownOpen"
+              class="relative block h-8 w-8 rounded-full overflow-hidden shadow focus:outline-none">
+              <img src="{{url('/build/logo.png')}}" alt="..." class="   max-w-50 rounded h-8 w-8">
+            
+              </button>
+     
+
+       
+        <div class = "hidden md:block text-sm md:text-md text-black dark:text-white "> {{ Auth::user()->name }}</div> 
+
+
+
+        <div x-show="dropdownOpen" @click="dropdownOpen = false" class="fixed inset-0 h-full w-full z-10"
+              style="display: none;"></div>
+              
+        <div x-show="dropdownOpen"
+              class="absolute right-0 mt-2 w-48 bg-white rounded-md overflow-hidden shadow-xl z-10"
+              style="display: none;">
+                                                                                
+              <a href="/"
+                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-600 hover:text-white">Home</a> 
+              <a href="/Management"
+                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-600 hover:text-white">Account Management</a> 
+                  
+             <a href="/register"
+                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-600 hover:text-white">Add User</a> 
+
+
+                  <a href="/registration/create"
+                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-600 hover:text-white">PWD Registration</a> 
+
+  
+                </div>    
+              </div>
+          </div>
+      </div> -->
+      <div class="flex space-x-3 items-center px-3">
+
+<div x-data="{ dropdownOpen: false }" class="relative">
+
+    <button @click="dropdownOpen = !dropdownOpen"
+        class="relative block h-8 w-8 rounded-full overflow-hidden shadow focus:outline-none">
+        <img src="{{ url('/build/logo.png') }}" alt="..." class="max-w-50 rounded h-8 w-8">
+    </button>
+
+    <div class="hidden md:block text-sm md:text-md text-black dark:text-white">
+        @auth
+        {{ Auth::user()->name }}
+        @endauth
     </div>
-    <aside class = " mt-3 w-60 -translate-x-48 fixed transition transform ease-in-out duration-1000 z-50 flex h-screen bg-white-500  shadow-lg shadow-green-500/50 ">
+
+    <div x-show="dropdownOpen" @click="dropdownOpen = false" class="fixed inset-0 h-full w-full z-10"
+        style="display: none;"></div>
+
+    <div x-show="dropdownOpen"
+        class="absolute right-0 mt-2 w-48 bg-white rounded-md overflow-hidden shadow-xl z-10"
+        style="display: none;">
+
+        @auth
+            <a href="/" class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-600 hover:text-white flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z" />
+                </svg>
+                Home
+            </a>
+
+            <a href="/Management" class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-600 hover:text-white flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+                </svg>
+                Account Management
+            </a>
+
+            <a href="/register" class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-600 hover:text-white flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z" />
+                </svg>
+                Add User
+            </a>
+
+            <a href="/registration/create" class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-600 hover:text-white flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
+                </svg>
+                PWD Registration
+            </a>
+
+            <form action="/logout" method="post">
+                @csrf
+                <button class=" block py-2 pr-3 pl-2 text-black transition duration-300 hover:text-red-900  flex items-center font-bold">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h- ml-2 mr-2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5.636 5.636a9 9 0 1012.728 0M12 3v9" />
+                </svg>
+
+                    Log Out
+                </button>
+            </form>
+
+        @else
+            <li>
+                <a href="/login" class="block py-2 pr-4 pl-3">Sign In</a>
+            </li>
+            <li>
+                <a href="/register" class="block py-2 pr-4 pl-3">Sign Up</a>
+            </li>
+        @endauth
+
+           </div>
+       </div>
+    </div>
+</div>
+
+<!-- =============================================================================================================================== -->
+
+
+    <aside class = " w-60 -translate-x-48 fixed transition transform ease-in-out duration-1000 z-50 flex h-screen bg-white-500  shadow-lg shadow-green-500/50 ">
         <!-- open sidebar button -->
         <div class = "max-toolbar translate-x-24 scale-x-0 w-full -right-6 transition transform ease-in duration-300 flex items-center justify-between border-4 border-white dark:border-[#0F172A] bg-stone-200  absolute top-2 rounded-full h-12">
             
@@ -77,10 +177,16 @@
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
             </svg>
         </div>
+
+
+        
         <!-- MAX SIDEBAR-->
-        <div class= "max hidden text-black mt-20 flex-col space-y-2 w-full h-[calc(100vh)]">
+        <div class= " bg-green-700 max hidden text-black  text-white  mt-20 flex-col space-y-2 w-full h-[calc(100vh)]">
+
+
+        <h1 class= " font-bold ml-4 w-full  text-black text-white-500 text-white bg-white-100 p-2 pl-8 rounded-full transform ease-in-out duration-300 flex flex-row items-center space-x-3">PWD Transactions</h1>
             <div class =  "hover:ml-4 w-full text-black hover:text-white-500 dark:hover:text-green-500 bg-white-100 p-2 pl-8 rounded-full transform ease-in-out duration-300 flex flex-row items-center space-x-3">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" class="w-4 h-4">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" class="w-5 h-5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
                 </svg>    
                 <div >
@@ -89,131 +195,291 @@
                 </div>
                 
             </div>
+            
             <div class =  "hover:ml-4 w-full text-black hover:text-white-500 dark:hover:text-green-500 bg-white-100 p-2 pl-8 rounded-full transform ease-in-out duration-300 flex flex-row items-center space-x-3">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 5.25h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5" />
                 </svg>                      
                 <div>
-                    Profiling
+                <a href ="{{url('/Profilling')}}" class="text-base leading-4">Profilling</a>
+
                 </div>
             </div>
+
+
+
             <div class =  "hover:ml-4 w-full text-black hover:text-white-500 dark:hover:text-green-500 bg-white-100 p-2 pl-8 rounded-full transform ease-in-out duration-300 flex flex-row items-center space-x-3">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z" />
-                </svg>                      
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+               <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+
+                     
+               <div>
+                <a href ="{{url('Pwdprofile')}}" class="text-base leading-4">PWD Profile</a>
+                </div>
+             </div>
+
+
+             
+            <hr class="border-1 border-black-200 hover:border-green-500 drop-shadow-xl"/>
+
+           <h1 class= " font-bold ml-4 w-full text-black text-white-500 text-white bg-white-100 p-2 pl-8 rounded-full transform ease-in-out duration-300 flex flex-row items-center space-x-3">Account Management</h1>
+           <div class =  "hover:ml-4 w-full text-black hover:text-white-500 dark:hover:text-green-500 bg-white-100 p-2 pl-8 rounded-full transform ease-in-out duration-300 flex flex-row items-center space-x-3">
+                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+               <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+                   </svg>
+
+
+                     
                 <div>
-                    Assistance
+                <a href ="{{url('Management')}}" class="text-base leading-4">User Profile</a>
+
                 </div>
             </div>
-   
-            <div class =  "hover:ml-4 w-full text-black hover:text-white-500 dark:hover:text-green-500 bg-white-100 p-2 pl-8 rounded-full transform ease-in-out duration-300 flex flex-row items-center space-x-3">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-           <path stroke-linecap="round" stroke-linejoin="round" d="M10.125 2.25h-4.5c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125v-9M10.125 2.25h.375a9 9 0 019 9v.375M10.125 2.25A3.375 3.375 0 0113.5 5.625v1.5c0 .621.504 1.125 1.125 1.125h1.5a3.375 3.375 0 013.375 3.375M9 15l2.25 2.25L15 12" />
-          </svg>                 
+
+  
+            <hr class="border-1 border-black-200 hover:border-green-500 drop-shadow-xl"/>
+
+           <h1 class= " font-bold ml-4 w-full text-black text-white-500 text-white bg-white-100 p-2 pl-8 rounded-full transform ease-in-out duration-300 flex flex-row items-center space-x-3">Assistance Transactions</h1>
+           <div class =  "hover:ml-4 w-full text-black hover:text-white-500 dark:hover:text-green-500 bg-white-100 p-2 pl-8 rounded-full transform ease-in-out duration-300 flex flex-row items-center space-x-3">
+           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z" />
+        </svg>
+
+                     
                 <div>
-                    Reports
-                </div>
-            </div>
+                <a href ="{{url('/Assistance')}}" class="text-base leading-4"> Assistance Ledger</a>
+
+             </div>
         </div>
+       
+       
+
+         <div class="hover:ml-4 w-full text-black hover:text-white-500 dark:hover:text-green-500 bg-white-100 p-2 pl-8 rounded-full transform ease-in-out duration-300 flex flex-row items-center space-x-3">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 01-2.25 2.25M16.5 7.5V18a2.25 2.25 0 002.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 002.25 2.25h13.5M6 7.5h3v3H6v-3z" />
+              </svg>
+
+
+        <div>
+            <a href="" class="text-base leading-4">Assistance Master List</a>
+        </div>
+            </div>
+
+
+
+            
+
+            <div class="hover:ml-4 w-full text-black hover:text-white-500 dark:hover:text-green-500 bg-white-100 p-2 pl-8 rounded-full transform ease-in-out duration-300 flex flex-row items-center space-x-3">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.125 2.25h-4.5c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125v-9M10.125 2.25h.375a9 9 0 019 9v.375M10.125 2.25A3.375 3.375 0 0113.5 5.625v1.5c0 .621.504 1.125 1.125 1.125h1.5a3.375 3.375 0 013.375 3.375M9 15l2.25 2.25L15 12" />
+        </svg>
+
+        <div>
+            <a href="{{ url('/PdaoAssistance/create') }}" class="text-base leading-4">Assistance Given Form</a>
+        </div>
+            </div>
+
+
+
+            <hr class="border-1 border-black-200 hover:border-green-500 drop-shadow-xl"/>
+
+           <h1 class= " font-bold ml-4 w-full text-black text-white-500 text-white bg-white-100 p-2 pl-8 rounded-full transform ease-in-out duration-300 flex flex-row items-center space-x-3">Assistance Report</h1>
+           <div class =  "hover:ml-4 w-full text-black hover:text-white-500 dark:hover:text-green-500 bg-white-100 p-2 pl-8 rounded-full transform ease-in-out duration-300 flex flex-row items-center space-x-3">
+           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a2.25 2.25 0 00-2.25-2.25H15a3 3 0 11-6 0H5.25A2.25 2.25 0 003 12m18 0v6a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 18v-6m18 0V9M3 12V9m18 0a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 9m18 0V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v3" />
+</svg>
+
+
+                     
+                <div>
+                <a href ="" class="text-base leading-4">Assistance Given </a>
+
+                </div>
+            </div>
+
+       <hr class="border-1 border-black-200 hover:border-green-500 drop-shadow-xl"/>
+ 
+
+         <h1 class= " font-bold ml-4 w-full text-black text-white-500 text-white bg-white-100 p-2 pl-8 rounded-full transform ease-in-out duration-300 flex flex-row items-center space-x-3">Setting</h1>
+         <div class="hover:ml-4 w-full text-black hover:text-white-500 dark:hover:text-green-500 bg-white-100 p-2 pl-8 rounded-full transform ease-in-out duration-300 flex flex-row items-center space-x-3">
+         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+           <path stroke-linecap="round" stroke-linejoin="round" d="M9 3.75H6.912a2.25 2.25 0 00-2.15 1.588L2.35 13.177a2.25 2.25 0 00-.1.661V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18v-4.162c0-.224-.034-.447-.1-.661L19.24 5.338a2.25 2.25 0 00-2.15-1.588H15M2.25 13.5h3.86a2.25 2.25 0 012.012 1.244l.256.512a2.25 2.25 0 002.013 1.244h3.218a2.25 2.25 0 002.013-1.244l.256-.512a2.25 2.25 0 012.013-1.244h3.859M12 3v8.25m0 0l-3-3m3 3l3-3" />
+             </svg>
+
+    <div>
+        <a href="{{url('/TypesofAssistance/create')}}" class="text-base leading-4">Types of Assistance</a>
+    </div>
+</div>
+
+          <div role="button" tabindex="0" class="hover:ml-4 w-full text-black hover:text-white-500 dark:hover:text-green-500 bg-white-100 p-2 pl-8 rounded-full transform ease-in-out duration-300 flex flex-row items-center space-x-3" title="Click to access settings">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+          </svg>
+
+              <div>
+                  <a href="{{url('/ProgramAssistance/create')}}" class="text-base leading-4">Types of Program</a>
+              </div>
+          </div>
+
+
+      </div>
+
+ </div>
+        
+
+
+
         <!-- MINI SIDEBAR-->
         <div class= "mini mt-20 flex flex-col space-y-2 w-full h-[calc(100vh)]">
-            <div class= "hover:ml-4 justify-end pr-5 text-white hover:text-black dark:hover:text-blue-500 w-full bg-green-600 p-3  transform ease-in-out duration-300 flex">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" class="w-4 h-4">
+
+                 <!-- 1stlink -->
+                <a href="{{ url('/') }}" class="hover:ml-4 justify-end pr-5 text-black hover:text-black dark:hover:text-blue-500 w-full bg-green-600 p-3 transform ease-in-out duration-300 flex">
+            <div class="text-base leading-4">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
-                </svg>                  
+                </svg>
             </div>
-            <div class= "hover:ml-4 justify-end pr-5 text-white hover:text-black  dark:hover:text-blue-500 w-full  bg-green-600 p-3  transform ease-in-out duration-300 flex">
+        </a>
+
+            <!-- 2nd link -->
+        <a href="{{ url('/Profilling') }}" >
+            <div class= "hover:ml-4 justify-end pr-5 text-black hover:text-black  dark:hover:text-blue-500 w-full  bg-green-600 p-3  transform ease-in-out duration-300 flex">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 5.25h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5" />
                 </svg>                 
             </div>
-            <div class= "hover:ml-4 justify-end pr-5 text-white hover:text-black  dark:hover:text-blue-500 w-full  bg-green-600 p-3 r transform ease-in-out duration-300 flex">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z" />
-                </svg>           
-            </div>
+         </a>
 
 
-            <div class= "hover:ml-4 justify-end pr-5 text-white hover:text-black  dark:hover:text-blue-500 w-full  bg-green-600 p-3 r transform ease-in-out duration-300 flex">
+             <!-- 3rd link -->
+        <a href ="{{url('Pwdprofile')}}">
+            <div class= "hover:ml-4 justify-end pr-5 text-black hover:text-black  dark:hover:text-blue-500 w-full  bg-green-600 p-3 r transform ease-in-out duration-300 flex">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>     
+       </div>
+   </a>
+
+           <!-- 4th link -->
+       <a href ="{{url('Management')}}">
+            <div class= "hover:ml-4 justify-end pr-5 text-black hover:text-black  dark:hover:text-blue-500 w-full  bg-green-600 p-3 r transform ease-in-out duration-300 flex">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+            </svg>
+      </div>
+</a>
+<!-- 
+
+               5th link -->
+          <a href ="{{url('/Assistance')}}">
+             <div class= "hover:ml-4 justify-end pr-5 text-black hover:text-black  dark:hover:text-blue-500 w-full  bg-green-600 p-3 r transform ease-in-out duration-300 flex">
+             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+               <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z" />
+              </svg>    
+      </div>
+</a>
+
+
+
+
+               <!-- 6th link -->
+               <a href="">
+             <div class= "hover:ml-4 justify-end pr-5 text-black hover:text-black  dark:hover:text-blue-500 w-full  bg-green-600 p-3 r transform ease-in-out duration-300 flex">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 01-2.25 2.25M16.5 7.5V18a2.25 2.25 0 002.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 002.25 2.25h13.5M6 7.5h3v3H6v-3z" />
+                   </svg>
+          </div>
+      </a>
+
+
+
+
+             
+               <!-- 7th link -->
+               <a href="{{ url('/PdaoAssistance/create') }}">
+             <div class= "hover:ml-4 justify-end pr-5 text-black hover:text-black  dark:hover:text-blue-500 w-full  bg-green-600 p-3 r transform ease-in-out duration-300 flex">
+             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
            <path stroke-linecap="round" stroke-linejoin="round" d="M10.125 2.25h-4.5c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125v-9M10.125 2.25h.375a9 9 0 019 9v.375M10.125 2.25A3.375 3.375 0 0113.5 5.625v1.5c0 .621.504 1.125 1.125 1.125h1.5a3.375 3.375 0 013.375 3.375M9 15l2.25 2.25L15 12" />
-           </svg>     
+          </svg>     
              </div>
-         </div>      
-    </aside>
+</a>
+
+                   <!-- 8th link -->
+             <div class= "hover:ml-4 justify-end pr-5 text-black hover:text-black  dark:hover:text-blue-500 w-full  bg-green-600 p-3 r transform ease-in-out duration-300 flex">
+             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a2.25 2.25 0 00-2.25-2.25H15a3 3 0 11-6 0H5.25A2.25 2.25 0 003 12m18 0v6a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 18v-6m18 0V9M3 12V9m18 0a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 9m18 0V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v3" />
+                </svg>
+             </div>
+
+
+               <!-- 9th link -->
+               <a href="{{url('/TypesofAssistance/create')}}">
+             <div class= "hover:ml-4 justify-end pr-5 text-black hover:text-black  dark:hover:text-blue-500 w-full  bg-green-600 p-3 r transform ease-in-out duration-300 flex">
+                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 3.75H6.912a2.25 2.25 0 00-2.15 1.588L2.35 13.177a2.25 2.25 0 00-.1.661V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18v-4.162c0-.224-.034-.447-.1-.661L19.24 5.338a2.25 2.25 0 00-2.15-1.588H15M2.25 13.5h3.86a2.25 2.25 0 012.012 1.244l.256.512a2.25 2.25 0 002.013 1.244h3.218a2.25 2.25 0 002.013-1.244l.256-.512a2.25 2.25 0 012.013-1.244h3.859M12 3v8.25m0 0l-3-3m3 3l3-3" />
+                   </svg>
+             </div>
+        </a>
+                 
+               <!-- 10th link -->
+               <a href="{{url('/ProgramAssistance/create')}}">
+                  <div class= "hover:ml-4 justify-end pr-5 text-black hover:text-black  dark:hover:text-blue-500 w-full  bg-green-600 p-3 r transform ease-in-out duration-300 flex">
+                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                   <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+                     </svg>
+             </div>
+          </a>
+      </div>      
+</aside>
+
     <!-- CONTENT -->
-    <div class = "content ml-12 transform ease-in-out duration-500 pt-20 px-2 md:px-5 pb-4 ">
-        <nav class = " flex px-5 py-3 text-gray-700  rounded-lg bg-stone-100 dark:bg-[#1E293B] " aria-label="Breadcrumb">
+     <div class = "content ml-12 transform ease-in-out duration-500 pt-20 px-2 md:px-5 pb-4 ">
+        <nav class = "flex px-5 py-3 text-gray-700 rounded-lg bg-stone-100 dark:bg-[#1E293B] " aria-label="Breadcrumb">
             <ol class = "inline-flex items-center space-x-1 md:space-x-3">
                 <li class = "inline-flex items-center">
-                <div class="dot w-4 h-4 rounded-full cursor-pointer" onclick="currentSlide(1)"></div>
-                       <a href="#" class = "ml-1 text-sm font-medium text-gray-700 hover:text-gray-900 md:ml-2 dark:text-gray-400 dark:hover:text-white bg-slate-200 rounded w-full text-greay-700 focus:outline-none border-gray-400 px-5 py-2">Member Information</a>
-                    </a>    
-                </li>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" data-slot="icon" class="w-6 h-6 mr-2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                </svg>
 
-                <li>
-                <li class = "inline-flex items-center">
-                <div class="dot w-4 h-4 rounded-full cursor-pointer" onclick="currentSlide(2)"></div>
-                       <a href="#" class = "ml-1 text-sm font-medium text-gray-700 hover:text-gray-900 md:ml-2 dark:text-gray-400 dark:hover:text-white bg-blue-200 rounded w-full text-greay-700 focus:outline-none border-gray-400 px-5 py-2">Contact Details</a>
-                    </a>    
-                </li>
-                </li>
 
-                <li>
-                <li class = "inline-flex items-center">
-                <div class="dot w-4 h-4 rounded-full cursor-pointer" onclick="currentSlide(3)"></div>
-                       <a href="#" class = "ml-1 text-sm font-medium text-gray-700 hover:text-gray-900 md:ml-2 dark:text-gray-400 dark:hover:text-white bg-violet-200 rounded w-full text-greay-700 focus:outline-none border-gray-400 px-5 py-2">Types of Disease</a>
-                    </a>    
+                     PwdProfile
+                    </a>
                 </li>
-                </li>  
-              
-                <li>
-                    <div class = "flex items-center">                      
-                    <li class = "inline-flex items-center">
-                <div class="dot w-4 h-4 rounded-full cursor-pointer" onclick="currentSlide(4)"></div>
-                       <a href="#" class = "ml-1 text-sm font-medium text-gray-700 hover:text-gray-900 md:ml-2 dark:text-gray-400 dark:hover:text-white bg-stone-200 rounded w-full text-greay-700 focus:outline-none border-gray-400 px-5 py-2">ID References</a>
-                    </a>    
-                </li>
-                </li>
-                <li>
-                    <div class = "flex items-center">                      
-                    <li class = "inline-flex items-center">
-                <div class="dot w-4 h-4 rounded-full cursor-pointer" onclick="currentSlide(5)"></div>
-                       <a href="#" class = "ml-1 text-sm font-medium text-gray-700 hover:text-gray-900 md:ml-2 dark:text-gray-400 dark:hover:text-white bg-emerald-200 rounded w-full text-greay-700 focus:outline-none border-gray-400 px-5 py-2">Accomplished By</a>
-                    </a>    
-                </li>
-                </li>              
-                <li>
-                    <div class = "flex items-center">                      
-                    <li class = "inline-flex items-center">
-                <div class="dot w-4 h-4 rounded-full cursor-pointer" onclick="currentSlide(6)"></div>
-                       <a href="#" class = "ml-1 text-sm font-medium text-gray-700 hover:text-gray-900 md:ml-2 dark:text-gray-400 dark:hover:text-white bg-rose-200 rounded w-full text-greay-700 focus:outline-none border-gray-400 px-5 py-2">Approving By</a>
-                    </a>    
-                </li>
-                </li>
-                <li>
-
             </ol>
-        </nav>
-     <br>
-        
-     <div class="float-right">
-            <button class="  space-x-px space-x-36 mb-3  bg-blue-500 text-white active:bg-green-900 text-xs px-2 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150" type="button">
-              Save
-            </button>
-            <button class="  space-x-36 mb-3  bg-blue-500 text-white active:bg-green-600 text-xs px-2 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150" type="button">
-               Update
-            </button>
-            <button class="  space-x-36 mb-3  bg-red-500 text-white active:bg-red-600 text-xs px-2 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150" type="button">
-               Delete
-            </button>
-            </div>        
-         </div>
 
+
+
+            <div class = "grow h-full flex items-center justify-center "></div>
+           <div class = "grow h-full flex items-center justify-center "></div>
+
+             <div class="relative mb-0 flex justify-end" data-te-input-wrapper-init>
+                
+             <form action="{{ route('pwdprofile.search') }}"  method="GET" class="flex items-center">
+
+                   <input
+                      type="search" name="query"
+                        class=" flex justify-end peer block min-h-[auto] w-full rounded border-0 bg-white-200 px-20 py-[0.50rem] leading-[1.9] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-black data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-blue-200 dark:placeholder:text-neutral-200 dark:peer-focus:text-primary [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
+                         id=""  placeholder="search" />
+                         <label
+                          
+                                class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-blue-900 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[0.9rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-green-200 dark:peer-focus:text-blue-900"
+                                       >Search</label>                                           
+                </form>        
+            </div>
+        </nav>
         <!-- <start of content> -->
-      
+<!--      
+        <button onclick="window.print()" class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow  mt-5 mr-2">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-1">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0110.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0l.229 2.523a1.125 1.125 0 01-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.318 0h1.091A2.25 2.25 0 0021 15.75V9.456c0-1.081-.768-2.015-1.837-2.175a48.055 48.055 0 00-1.913-.247M6.34 18H5.25A2.25 2.25 0 013 15.75V9.456c0-1.081.768-2.015 1.837-2.175a48.041 48.041 0 011.913-.247m10.5 0a48.536 48.536 0 00-10.5 0m10.5 0V3.375c0-.621-.504-1.125-1.125-1.125h-8.25c-.621 0-1.125.504-1.125 1.125v3.659M18 10.5h.008v.008H18V10.5zm-3 0h.008v.008H15V10.5z" />
+    </svg>
+    Print
+</button> -->
+
+
+
+
     <form action ="/"  method="POST" class=" w-full flex flex-col space-y-4 text-gray-70  bg-white-100 mt-10">
        @csrf
   
@@ -222,45 +488,117 @@
 
            <script src="https://cdn.jsdelivr.net/gh/alpine-collective/alpine-magic-helpers@0.3.x/dist/index.js"></script>
 
-     <!-- 
-        <div x-data="{photoName: null, photoPreview: null}" class="col-span-6 ml-2 sm:col-span-4 md:mr-3">
-                       Photo File Input -->
-              <input type="file" class="hidden" x-ref="photo" x-on:change="
-                        photoName = $refs.photo.files[0].name;
-                        const reader = new FileReader();
-                        reader.onload = (e) => {
-                            photoPreview = e.target.result;
-                        };
-                        reader.readAsDataURL($refs.photo.files[0]);">
-
-          <label class="block text-gray-700 text-sm font-bold mb-2 text-center" for="photo">
-                                Member Photo <span class="text-red-600"> </span>
-         </label>
-    
-     <div class="text-center">
-  
-        <div class="mt-2" x-show="! photoPreview">
-            <img src="https://images.unsplash.com/photo-1531316282956-d38457be0993?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=80" class="w-40 h-40 m-auto rounded-full shadow">
-        </div>
  
-        <div class="mt-2" x-show="photoPreview" style="display: none;">
-            <span class="block w-40 h-40 rounded-full m-auto shadow" x-bind:style="'background-size: cover; background-repeat: no-repeat; background-position: center center; background-image: url(\'' + photoPreview + '\');'" style="background-size: cover; background-repeat: no-repeat; background-position: center center; background-image: url('null');">
-            </span>
+
+
+
+ <!-- content-->
+<!--
+ ======================================================================================================================================= -->
+
+ <div class="relative w-[1000px] mx-auto">
+    @foreach ($results as $result)
+ <?php
+        $dateApplied = new DateTime($result->date_applied);
+        $expirationDate = clone $dateApplied;
+        $expirationDate->modify('+5 years');
+        $expirationDateString = $expirationDate->format('Y-m-d');
+        ?>  
+        <div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl m-5">
+            <div class="md:flex">
+                <div class="md:flex-shrink-0">
+                    <img class="h-48 w-full object-cover md:w-48" src="{{ url('/build/logo.png') }}" alt="Event image">
+                </div>
+                <div class="p-8">
+           <div class="uppercase tracking-wide text-xl text-indigo-500 font-semibold">PWD MEMBER</div> 
+                    <p class="block mt-1 text-lg leading-tight font-medium text-black text-uppercase">
+                        {{ strtoupper($result->last_name) }} {{ strtoupper($result->first_name) }} {{ strtoupper($result->middle_name) }}  {{ strtoupper($result->suffix_of_applicant) }}
+                    </p>
+                    <p class="mt-2 {{ $result->application === 'death' ? 'text-violet' : 'text-black' }}">Application: {{ $result->application }}</p>
+                    <p class="mt-2 text-black">Birthday: {{ $result->birthday }}</p>
+                    <p class="mt-2 {{ $result->age >= 60 ? 'text-red' : 'text-black' }}">Age: {{ $result->age }}</p>
+                    <p style="color: red;">Expiration Date: {{ $expirationDateString }}</p>
+                    <p style="color: green;">PWD No: {{ $result->pwd_no }}</p>
+                    <p class="mt-2 text-black">Status: {{ $result->middle_name_of_reporting_unit }}</p>
+                </div>
+            </div>
         </div>
-           <button type="button" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:text-gray-500 focus:outline-none focus:border-blue-400 focus:shadow-outline-blue active:text-gray-800 active:bg-gray-50 transition ease-in-out duration-150 mt-2 ml-3" x-on:click.prevent="$refs.photo.click()">
-                      Select New Photo
-           </button>
+        <div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl m-5">
+            <div class="p-8">
+                <div class="uppercase tracking-wide text-sm text-indigo-500 font-semibold">
+                    MEMBER INFORMATION
+                </div>
+                <p class="mt-2 text-black">Date_applied: {{ $result->date_applied }}</p>
+                <p class="mt-2 text-black">Status: {{ $result->status }}</p>
+                <p class="mt-2 text-black">Gender: {{ $result->gender }}</p>
+                <p class="mt-2 text-black">Purok: {{ $result->purok }}</p>
+                <p class="mt-2 text-black">Barangay: {{ $result->barangay }}</p>
+                <!-- <p class="mt-2 text-black">Occupation: {{ $result->occupations }}</p> -->
+                <p class="mt-2 text-black">Occupation: {{ $result->middle_name_of_control_unit }}</p>
+                <p class="mt-2 text-black">Types of Disability:
+                                                    @php
+                                                        $types = json_decode($result->types_of_disability, true);
+                                                    @endphp
+
+                                                    @if(is_array($types))
+                                                        {{ implode(', ', $types) }}
+                                                    @else
+                                                        {{ $result->types_of_disability }}
+                                                    @endif
+                                                </p>
+
+
+                <!-- Add code for displaying types of disability here -->
+               
+
+
+
+                             <p class="mt-2 text-black">Cause of Disability:
+                                            @php
+                                                $causes = json_decode($result->cause_of_disability, true);
+                                            @endphp
+
+                                            @if(is_array($causes))
+                                                {{ implode(', ', $causes) }}
+                                            @else
+                                                {{ $result->cause_of_disability }}
+                                            @endif
+                                        </p>
+
+                                                   
+
+
+
+                <!-- Add code for displaying the cause of disability here -->
+                <p class="mt-2" style="color: red">Other Specify: {{ $result->first_name_of_control_unit }}</p>
+                <p class="mt-2 text-black">SSS No.: {{ $result->sss_no }}</p>
+                <p class="mt-2 text-black">PAG-IBIG No.: {{ $result->pag_ibig_no }}</p>
+                <p class="mt-2 text-black">GSIS No.: {{ $result->gsis_no }}</p>
+                <p class="mt-2 text-black">PHILHEALTH No.: {{ $result->philhealth }}</p>
+                <p class="mt-2 text-black">Father Last Name: {{ $result->father_last_name }}</p>
+                <p class="mt-2 text-black">Father First Name: {{ $result->father_first_name }}</p>
+                <p class="mt-2 text-black">Father Middle Name: {{ $result->father_middle_name }}</p>
+                <p class="mt-2 text-black">Mother Last Name: {{ $result->mother_last_name }}</p>
+                <p class="mt-2 text-black">Mother First Name: {{ $result->mother_first_name }}</p>
+                <p class="mt-2 text-black">Mother Middle Name: {{ $result->mother_middle_name }}</p>
+                 <p class="mt-2 text-black">Devices Given:
+                    @php
+                        $devicesGiven = json_decode($result->device_given, true);
+                    @endphp
+
+                    @if(is_array($devicesGiven))
+                        {{ implode(', ', $devicesGiven) }}
+                    @else
+                        {{ $result->device_given }}
+                    @endif
+                </p>
+            </div>
         </div>
-     </div> 
-
-
-
-
-    <!-- Implement the carousel -->
- <!-- Implement the carousel -->
-
- <div class="relative w-[1000px]   mx-auto">
+    @endforeach
+</div>
+{{ $result->links }}
     
+<!--     
  <!DOCTYPE html>
 <html>
 <head>
@@ -290,8 +628,8 @@
     <table class="custom-table" width="1000">
    
     <tr>
-        <td>1</td> <!-- Numbers in the leftmost column -->
-        <td colspan="2"> <strong>NEW APPLICANT</td></strong>
+        <td>1</td>  Numbers in the leftmost column -->
+        <!-- <td colspan="2"> <strong>NEW APPLICANT</td></strong>
         <td><strong>RENEW</td></strong>
         
         <td><strong>TRANSFER</td></strong>
@@ -381,9 +719,9 @@
 </table>
 
 </body>
-</html>
+</html> -->
 
-                    
+                   
 
 
 
@@ -411,6 +749,15 @@
 </div> -->
 
 
+
+
+
+
+
+<!-- --------------------expiration year------------------------------------------------------------- -->
+
+
+<!-- -------------------------------------------------------------------------------------- -->
 <!-- Javascript code -->
 <script>
     // set the default active slide to the first one

@@ -12,20 +12,25 @@ class organizationaccomp extends Model
 protected $table ='organization_accomplished'; // Specify the table name if different from the model name
 
     protected $fillable = [
-        
-        'house_and_street' ,
-        'purok',
-        'barangay' ,
-        'municipality',
-        'province',
-        'region' ,
-        'landline',
-        'mobile_no',
-        'email_add',
-        'educational_attain',
-        'status_of_employment',
-        'types_of_employment' ,
-        'category_of_employment'
+        'organizational_affiliated_name',
+        'contact_person',
+        'office_address',
+        'tel_no',
+        'applicant_last_name',
+        'applicant_first_name',
+        'applicant_middle_name',
+        'suffix_of_applicant',
+        'guardian_last_name',
+        'guardian_first_name',
+        'guard_middle_name',
+        'guardian_suffix',
+
+       'representative_last_name',
+       'representative_first_name',
+       'representative_middle_name',
+       'representative_suffix'
+     
+
     ];
 
     public function pwdmember()

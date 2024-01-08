@@ -27,22 +27,22 @@ class UserController extends Controller
         }
     }
     
-            public function process(Request $request){
+    public function process(Request $request){
 
-                $validated = $request->validate([
-                   
-                    "email" => ['required', 'email'],
-                    'password' => 'required'
-              ]);
-                   if(auth()->attempt($validated)) {
-                    $request->session()->regenerate();
+        $validated = $request->validate([
+            
+            "email" => ['required', 'email'],
+            'password' => 'required'
+        ]);
+            if(auth()->attempt($validated)) {
+            $request->session()->regenerate();
 
-                    return redirect('/')->with('message', 'Welcome back!');
-                   
-                   }
+            return redirect('/')->with('message', 'Welcome back!');
+            
+            }
 
-                   return back()->withErrors(['email' => 'Login failed'])->onlyInput('email');
-                }
+            return back()->withErrors(['email' => 'Login failed'])->onlyInput('email');
+        }
     
     public function register(){
         return view('user.register');
@@ -63,7 +63,7 @@ class UserController extends Controller
           $validated = $request->validate([
            "name" => ['required', 'min:4'],
            "email" => ['required', 'email', Rule::unique('users','email')],
-           "status" => ['required'],
+           "status" => ['required', Rule::in(['Admin', 'User'])], // 'status' can be 'Admin' or 'User'
            'password' => 'required|confirmed|min:6'
      ]);
 

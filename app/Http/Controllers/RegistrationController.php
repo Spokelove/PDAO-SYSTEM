@@ -39,48 +39,10 @@ class RegistrationController extends Controller
 
  
     public function index ()
+   
     {
 
-
-     $pwdgraph = Pwdmember::selectRaw('MONTH(created_at) as month, COUNT(*) as count')
-      ->whereYear('created_at', date('Y'))
-      ->groupBy('month')
-      ->orderBy('month')
-      ->get();
-  
-  $labels = [];
-  $data = [];
-  $colors = ['#ff6384', '#36a2eb', '#ffce56', '#8bc34a', '#ff5722', '#009688', '#795548', '#9c27b0', '#2196f3', '#ff9800', '#cddc39', '#0607d8d'];
-  
-  for ($i = 1; $i <= 12; $i++) {
-      $month = date('F', mktime(0, 0, 0, $i, 1));
-      $count = 0;
-  
-      foreach ($pwdgraph as $pwdmember) {
-          if ($pwdmember->month == $i) {
-              $count = $pwdmember->count;
-              break;
-          }
-      }
-  
-      array_push($labels, $month);
-      array_push($data, $count);
-  }
-  
-  $datasets = [
-      [
-          'label' => 'pwdgraph',
-          'data' => $data,
-          'backgroundColor' => $colors,
-      ],
-  ];
-  
-
-
-
-
-
-
+// --------------------------------------------------------------------------------------------------------------------
 
       //  dd($request);
   //  / $devices_given = devices_given::paginate(10);
@@ -143,14 +105,12 @@ class RegistrationController extends Controller
       $categorys = CategoryEmployment::all();
       $types =typeEmployment::all();
       $occupations =Occupation::all();
-      // $typesdisability = typesdisability::all();
+    
       {
        
        
     }
-      // $typesdisability = typesdisability::all();
-     
-   
+  
       return view ('Registration.create', compact('attainments','puroks','barangays','municipalities','employments','categorys','types','occupations','types'));
 
       // return view ('Registration.create');
@@ -158,121 +118,132 @@ class RegistrationController extends Controller
 
     public function store(Request $request){
       {
+
         
+          // dd($request);
+      //  return dd($request); 
+      DB::beginTransaction();
+
+      try {
       
-        // dd($request);
-      //  return dd($request);
-        // Validate and store  Pwdmember
-
-
-           $Pwdmember =  Pwdmember::create([
-          'name' => $request->input('name'),
-          'pwd_no' => $request->input('pwd_no'),
-          'date_applied' => $request->input('date_applied'),
-          'application' => $request->input('application'),
-          'last_name' => $request->input('last_name'),
-          'first_name' => $request->input('first_name'),
-          'middle_name' => $request->input('middle_name'),
-          'suffix_of_applicant' => $request->input('suffix_of_applicant'),
-          'birthday' => $request->input('birthday'),
-          'gender' => $request->input('gender'),
-          
-          'status' => $request->input('status'),
-          'email_add' => $request->input('email_add'),
-          'image_path' => $request->input('image_path'),
-
-
+        $request->validate([
+            'pwd_no' => 'required',
+            'date_applied' => 'required|date',
+            'application' => 'required',
+            'last_name' => 'required',
+            'first_name' => 'required',
+            'middle_name' => 'required',
+            'suffix_of_applicant' => 'nullable', // Updated validation rule
+            'birthday' => 'required|date',
+            'gender' => 'required',
+            'status' => 'required',
+            'email_add' => 'nullable|email',
+            'image_path' => 'nullable|image',
         ]);
-  // ------------------------------------------------------------------------------------------------  
         
 
-          $residence = new residence([      
-          'house_and_street' => $request->input('house_and_street'),
-          'purok' => $request->input('purok'),
-          'barangay' => $request->input('barangay'),
-          'municipality' => $request->input('municipality'),
-          'province' => $request->input('province'),
-          'region' => $request->input('region'),
-          'landline' => $request->input('landline'),
-          'mobile_no' => $request->input('mobile_no'),
-          'email_add' => $request->input('email_add'),
-          'educational_attain' => $request->input('educational_attain'),
-          'status_of_employment' => $request->input('status_of_employment'),
-          'types_of_employment' => $request->input('types_of_employment'),
-          'category_of_employment' => $request->input('category_of_employment'),  
-        ]);
-        $Pwdmember->residence()->save($residence);
-//  ----------------------------------------------------------------------------------------------------------------   
-         
 
-            $familyback = new familyback([
-          'father_last_name' => $request->input('father_last_name'),
-          'father_first_name' => $request->input('father_first_name'),
-          'father_middle_name' => $request->input('father_middle_name'),
-          'suffix_of_father' => $request->input('suffix_of_father'),
-          'mother_last_name' => $request->input('mother_last_name'),
-          'mother_first_name' => $request->input('mother_first_name'),
-          'mother_middle_name' => $request->input('mother_middle_name'),
-          'guardian_last_name' => $request->input('guardian_last_name'),
-          'guardian_first_name' => $request->input('guardian_first_name'),
-          'guardian_middle_name' => $request->input('guardian_middle_name'),
-          'suffix_of_guardian' => $request->input('suffix_of_guardian'),
-          'sss_no' => $request->input('sss_no'),
-          'gsis_no' => $request->input('gsis_no'),
-          'pag_ibig_no' => $request->input('pag_ibig_no'),
-          'psn_no' => $request->input('psn_no'),
-          'philhealth' => $request->input('philhealth'),
-          'occupations' => $request->input('occupations'),
+        $Pwdmember = $request->all(); // Retrieve all data from the request
+
+        if (!array_key_exists('suffix_of_applicant', $Pwdmember)) {
+            $Pwdmember['suffix_of_applicant'] = null; 
+        }
+        
+        $Pwdmember = Pwdmember::create($Pwdmember);
+        
+
+//      // Step 2: Residence Data Validation and Storage
+              $residence = new residence([      
+                'house_and_street' => $request->input('house_and_street'),
+                'purok' => $request->input('purok'),
+                'barangay' => $request->input('barangay'),
+                'municipality' => $request->input('municipality', 'Valencia City'), // Set default value to 'Valencia City'
+                'province' => $request->input('province', 'Bukidnon'), // Set default value to 'Bukidnon'
+                'region' => $request->input('region', '10'), // Set de
+                'landline' => $request->input('landline'),
+                'mobile_no' => $request->input('mobile_no'),
+                'email_add' => $request->input('email_add'),
+                'educational_attain' => $request->input('educational_attain'),
+                'status_of_employment' => $request->input('status_of_employment'),
+                'types_of_employment' => $request->input('types_of_employment'),
+                'category_of_employment' => $request->input('category_of_employment'),  
+              ]);
+              $Pwdmember->residence()->save($residence);
+
+
+
+//           // Step 3: Family Background Data Validation and Storage
       
-        ]);
-        $Pwdmember->familyback()->save($familyback);
-
-// ---------------------------------------------------------------------------------------------------------------------------
+          $familyback = new familyback([
+            'father_last_name' => $request->input('father_last_name'),
+            'father_first_name' => $request->input('father_first_name'),
+            'father_middle_name' => $request->input('father_middle_name'),
+            'suffix_of_father' => $request->input('suffix_of_father'),
+            'mother_last_name' => $request->input('mother_last_name'),
+            'mother_first_name' => $request->input('mother_first_name'),
+            'mother_middle_name' => $request->input('mother_middle_name'),
+            'guardian_last_name' => $request->input('guardian_last_name'),
+            'guardian_first_name' => $request->input('guardian_first_name'),
+            'guardian_middle_name' => $request->input('guardian_middle_name'),
+            'suffix_of_guardian' => $request->input('suffix_of_guardian'),
+            'sss_no' => $request->input('sss_no'),
+            'gsis_no' => $request->input('gsis_no'),
+            'pag_ibig_no' => $request->input('pag_ibig_no'),
+            'psn_no' => $request->input('psn_no'),
+            'philhealth' => $request->input('philhealth'),
+            'occupations' => $request->input('occupations'),
         
+          ]);
+          $Pwdmember->familyback()->save($familyback);
+  
 
-        $organizationaccomp = new organizationaccomp([
-          'organizational_affliated_name' => $request->input('organizational_affliated_name'),
-          'contact_person' => $request->input('contact_person'),
-          'office_address' => $request->input('father_middle_name'),
-          'tel_no' => $request->input('suffix_of_father'),
-          'applicant_last_name' => $request->input('mother_last_name'),
-          'applicant_first_name' => $request->input('mother_first_name'),
-          'applicant_middle_name' => $request->input('mother_middle_name'),
-          'suffix_of_applicant' => $request->input('guardian_last_name'),
-          'guard_last_name' => $request->input('guardian_first_name'),
-          'guardian_first_name' => $request->input('guardian_middle_name'),
-           'guard_middle_name' => $request->input('guard_middle_name'),
-          'guardian_suffix' => $request->input('suffix_of_guardian'),
-          'representative_last_name' => $request->input('representative_last_name'),
-          'representative_first_name' => $request->input('representative_first_name'),
-          'representative_middle_name' => $request->input('representative_middle_name'),
-          'representative_suffix' => $request->input('representative_suffix'),
-         
-          
-        ]);
-           $Pwdmember->organizationaccomp()->save($organizationaccomp);
+          $organizationaccomp = new organizationaccomp([
+            'organizational_affliated_name' => $request->input('organizational_affliated_name'),
+            'contact_person' => $request->input('contact_person'),
+            'office_address' => $request->input('father_middle_name'),
+            'tel_no' => $request->input('suffix_of_father'),
+            'applicant_last_name' => $request->input('applicant_last_name'),
+            'applicant_first_name' => $request->input('applicant_first_name'),
+            'applicant_middle_name' => $request->input('applicant_middle_name'),
+            'suffix_of_applicant' => $request->input('suffix_of_applicant'),
+            'guardian_last_name' => $request->input('guardian_first_name'),
+            'guardian_first_name' => $request->input('guardian_middle_name'),
+             'guard_middle_name' => $request->input('guard_middle_name'),
+            'guardian_suffix' => $request->input('suffix_of_guardian'),
+            'representative_last_name' => $request->input('representative_last_name'),
+            'representative_first_name' => $request->input('representative_first_name'),
+            'representative_middle_name' => $request->input('representative_middle_name'),
+            'representative_suffix' => $request->input('representative_suffix'),
+           
+            
+          ]);
+             $Pwdmember->organizationaccomp()->save($organizationaccomp);
+  
 
-// --------------------------------------------------------------------------------------------------------------------------
+// // // --------------------------------------------------------------------------------------------------------------------------
 
           $approvingofficer = new approvingofficer([
-         'licensed_no_of_physician'=> $request->input('licensed_no_of_physician'),
-         'last_name_of_physician'=> $request->input('last_name_of_physician'),
-         'first_name_of_physician'=> $request->input('first_name_of_physician'),
-         'middle_name_of_physician'=> $request->input('middle_name_of_physician'),
-         'suffix_of_physician'=> $request->input('suffix_of_physician'),
-        'last_name_of_processing_officer'=> $request->input('last_name_of_processing_officer'),
-        'first_name_of_processing_officer'=> $request->input('first_name_of_processing_officer'),
-        'middle_name_of_processing_officer'=> $request->input( 'middle_name_of_processing_officer'),
-        'suffix_of_processing_officer'=> $request->input( 'suffix_of_processing_officer'),
-       'last_name_of_approving_officer'=> $request->input( 'last_name_of_approving_officer'),
-       'first_name_of_approving_officer'=> $request->input('first_name_of_approving_officer'),
-       'middle_name_of_approving_officer'=> $request->input(  'middle_name_of_approving_officer'),
-      'suffix_of_approving_officer'=> $request->input('suffix_of_approving_officer'),
-        ]);
-        $Pwdmember->approvingofficer()->save($approvingofficer);
+            'licensed_no_of_physician'=> $request->input('licensed_no_of_physician'),
+            'last_name_of_physician'=> $request->input('last_name_of_physician'),
+            'first_name_of_physician'=> $request->input('first_name_of_physician'),
+            'middle_name_of_physician'=> $request->input('middle_name_of_physician'),
+            'suffix_of_physician'=> $request->input('suffix_of_physician'),
+            'last_name_of_processing_officer'=> $request->input('last_name_of_processing_officer'),
+            'first_name_of_processing_officer'=> $request->input('first_name_of_processing_officer'),
+            'middle_name_of_processing_officer'=> $request->input( 'middle_name_of_processing_officer'),
+            'suffix_of_processing_officer'=> $request->input( 'suffix_of_processing_officer'),
+            'last_name_of_approving_officer'=> $request->input( 'last_name_of_approving_officer'),
+            'first_name_of_approving_officer'=> $request->input('first_name_of_approving_officer'),
+            'middle_name_of_approving_officer'=> $request->input(  'middle_name_of_approving_officer'),
+            'suffix_of_approving_officer'=> $request->input('suffix_of_approving_officer'),
+            ]);
+          $Pwdmember->approvingofficer()->save($approvingofficer);
 
-// ---------------------------------------------------------------------------------------------------------------------------------
-     
+
+// // // ---------------------------------------------------------------------------------------------------------------
+
+  
+      
       $approvingsection = new approvingsection([
          
         'last_name_of_encoder'=> $request->input( 'last_name_of_encoder'), 
@@ -290,60 +261,99 @@ class RegistrationController extends Controller
         'first_name_of_control_unit'=> $request->input('first_name_of_control_unit'),    
         'middle_name_of_control_unit'=> $request->input( 'middle_name_of_control_unit'),   
         'suffix_of_control_unit'=> $request->input( 'suffix_of_control_unit'),
-     
+       
          
         ]);
         $Pwdmember->approvingsection()->save($approvingsection);
 
 
-  // ---------------------------------------------------------------------------------------------------------------------------------------------  
-      
-  
-  
-  $request->validate([
-    'types_of_disability'=>'required',
-   
-]);
+// // // -----------------------------------------------------------------------------------------------------------------------
 
-$typesdisability = new typesdisability ;          
-$typesdisability->types_of_disability = json_encode($request->types_of_disability);
-$Pwdmember->typesdisability()->save($typesdisability);
+ 
+ 
+          $request->validate([
+            'types_of_disability'=>'required',
+          
+          ]);
 
-// ---------------------------------------------------------------------------------------------------------------------------------------------------
+          $typesdisability = new typesdisability ;          
+          $typesdisability->types_of_disability = json_encode($request->types_of_disability);
+          $Pwdmember->typesdisability()->save($typesdisability);
 
 
-$request->validate([
-'cause_of_disability'=>'required',
+        //   $request->validate([
+        //     'types_of_disability' => 'required',
+        // ]);
+        
+        // $typesdisability = new typesdisability;
+        // $typesdisability->types_of_disability = implode(',', $request->types_of_disability);
+        // $Pwdmember->typesdisability()->save($typesdisability);
 
-]);
 
-$causedisability = new causedisability ;     
-$causedisability->cause_of_disability = json_encode($request->cause_of_disability);
-$Pwdmember->causedisability()->save($causedisability);
 
+// // ---------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+          $request->validate([
+          'cause_of_disability'=>'required',
+
+          ]);
+
+          $causedisability = new causedisability ;     
+          $causedisability->cause_of_disability = json_encode($request->cause_of_disability);
+          $Pwdmember->causedisability()->save($causedisability);
+
+
+        //   $request->validate([
+        //     'cause_of_disability' => 'required',
+        // ]);
+        
+        // $causedisability = new causedisability;
+        // $causedisability->cause_of_disability = implode(',', $request->cause_of_disability);
+        // $Pwdmember->causedisability()->save($causedisability);
 // ---------------------------------------------------------------------------------------------------------------------
 
-$request->validate([
-  'device_given' => 'nullable', // 'nullable' makes the field optional
-]);
+          // Step 8: Validate and store Devices (even if it's null)
+          $devicesData = $request->input('device_given');
 
-$devices = new Devices;
-$devices->device_given = json_encode($request->device_given);
-$Pwdmember->devices()->save($devices);
+          $request->validate([
+              'cause_of_disability' => 'required',
+          ]);
 
-// return redirect()->route('registration.create')->with('message', 'SAVE! Successfully PWD Member');
-
-// -----------------------------------------------------------------------------------------------------------------------------
-
+          $devices = new Devices;
+          $devices->device_given = json_encode($devicesData);
+          $Pwdmember->devices()->save($devices);
 
 
 
+        //  $devicesData = $request->input('device_given');
+        //   $request->validate([
+        //       'cause_of_disability' => 'required',
+        //   ]);
+
+        //   $devices = new Devices;
+        //   $devices->device_given = implode(',', $devicesData);
+        //   $Pwdmember->devices()->save($devices);
+
+
+DB::commit();
+
+// Redirect to a Success Page
+return redirect()->route('registration.create')->with('message', 'PWD Member Saved Successfully');
+} 
+catch (\Exception $e) {
+// Handle Exceptions and Rollback on Error
+
+DB::rollBack();
+return back()->withErrors(['error' => 'An error occurred.'])->withInput();
+}
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 return redirect()->route('registration.create')->with('message', 'SAVE ! Successuflly PWD Member');
     }
 }
 
+// -==================search engine=============================================================================================================================
 
 
 
@@ -367,12 +377,14 @@ public function search1(Request $request)
       'familyback__idrefences.occupations',
       'typesdisability.types_of_disability',
       'causedisability.cause_of_disability',
-      'pwd_member.application'
+      'pwd_member.application',
+      'approvingsection.first_name_of_control_unit'
   )
   ->leftJoin('residence', 'pwd_member.id', '=', 'residence.pwdmember_id')
   ->leftJoin('familyback__idrefences', 'pwd_member.id', '=', 'familyback__idrefences.pwdmember_id')
   ->leftJoin('typesdisability', 'pwd_member.id', '=', 'typesdisability.pwdmember_id')
   ->leftJoin('causedisability', 'pwd_member.id', '=', 'causedisability.pwdmember_id')
+  ->leftJoin('approvingsection', 'pwd_member.id', '=', 'approvingsection.pwdmember_id')
   ->where(function ($queryBuilder) use ($query) {
       $queryBuilder->where('last_name', 'like', '%' . $query . '%')
           ->orWhere('first_name', 'like', '%' . $query . '%')
@@ -392,6 +404,13 @@ public function search1(Request $request)
 
 // }
 
+
+
+
+
+
+
+// ================================================================================================================================================================
 public function edit($id)
 {
     //  dd($id);
@@ -411,9 +430,33 @@ public function edit($id)
 
 
 
-  $typesdisabilities = typesdisability::all();
-  $typesdisability = typesdisability::find($id);
+  // $typesdisabilities = typesdisability::all();
 
+  // $disabilities->types_of_disability::where('pwdmember_id', $id)->first();
+
+  // $selectedDisabilities = $disabilities ? json_decode($disabilities->types_of_disability, true) : [];
+  // ------------------------------------------------------------------------------------------------------------------------------
+
+ // $disabilities->types_of_disability::where('pwdmember_id', $id)->first();
+
+  // Controller code to fetch data
+  $pwdmember = Pwdmember::find($id);
+  $typesdisability = typesdisability::where('pwdmember_id', $id)->first();
+  $causedisability = causedisability::where('pwdmember_id', $id)->first();
+  $devices = devices::where('pwdmember_id', $id)->first();
+  
+  // Null check before decoding JSON data
+  $typesData = $typesdisability ? json_decode($typesdisability->types_of_disability, true) : [];
+  $causeData = $causedisability ? json_decode($causedisability->cause_of_disability, true) : [];
+  $devicesData = $devices ? json_decode($devices->device_given, true) : [];
+  
+  // Encode array data to JSON
+  $typesJson = json_encode($typesData);
+  $causeJson = json_encode($causeData);
+  $devicesJson = json_encode($devicesData);
+
+
+  // ------------------------------------------------------------------------------------------
 
 
   $disabilityOptions = [
@@ -440,259 +483,221 @@ public function edit($id)
     'Chronic Illness',
     'Celebral Palsy',
     'Injury)',
-    'Other
-    ',
+    'Other',
 
   ];
-  return view ('Registration.edit', compact('result', 'attainments','puroks','barangays','municipalities','employments','categorys','types','occupations','disabilityOptions','causeOfDisabilityOptions'));
-       
+  return view ('Registration.edit', compact('result', 'attainments','puroks','barangays','municipalities','employments','categorys','types','occupations', 'disabilityOptions','typesJson', 'causeJson','devicesJson'));
+  // return dd( $typesdisability);
 }
 
 
 public function update(Request $request, $id)
 {
-  // return dd($request);
-
-  $pwdmember = Pwdmember::findOrFail($id);
-  $request->validate([
-    'image_path' => 'required', // Add validation rules for other fields as needed
-    'pwd_no' => 'required',
-    'date_applied' => 'required|date',
-    'application' => 'required',
-    'last_name' => 'required',
-    'first_name' => 'required',
-    'middle_name' => 'required',
-    'suffix_of_applicant' => 'nullable', // Adjust validation rules as per your requirements
-    'birthday' => 'required|date',
-    'gender' => 'required|in:Male,Female', // Adjust gender options as needed
-    'status' => 'required|in:Single, Separated, Cohabitation(live-in), Married, Widow/er', // Adjust status options as needed
-    'email_add' => 'required|email',
-  ]);
-
-
-  // return response()->json($pwdmember);
-  $pwdmember->image_path = $request->input('image_path');
-  $pwdmember->pwd_no = $request->input('pwd_no');
-  $pwdmember->date_applied = $request->input('date_applied');
-  $pwdmember->application = $request->input('application');
-  $pwdmember->last_name = $request->input('last_name');
-  $pwdmember->first_name = $request->input('first_name');
-  $pwdmember->middle_name = $request->input('middle_name');
-  $pwdmember->suffix_of_applicant = $request->input('suffix_of_applicant');
-  $pwdmember->birthday = $request->input('birthday');
-  $pwdmember->gender = $request->input('gender');
-  $pwdmember->status = $request->input('status');
-  $pwdmember->email_add = $request->input('email_add');
-  // $pwdmember->name = $request->input('name');
-  // Save the changes
-  $pwdmember->save();
-
-
-// =================================================================================================================
-  
-  $typesdisability = typesdisability::find($id);
-
-  // I-validate ang input data (ito ay optional depende sa inyong pangangailangan)
-  $request->validate([
-      'types_of_disability' => 'array', // Siguruhing ito ay isang array
-  ]);
-
-  // Kunin ang input data mula sa form
-  $selectedTypes = $request->input('Deaf or Hard Of Hearing', []);
-  $selectedTypes = $request->input('Intellectual Disability', []);
-  $selectedTypes = $request->input('Learning Disability', []);
-  $selectedTypes = $request->input('Mental Disability', []);
-  $selectedTypes = $request->input('Physical Disability (Orthopedic)', []); 
-  $selectedTypes = $request->input('Psychosocial Disability', []);
-  $selectedTypes = $request->input('Speech and Language Impairment', []);
-  $selectedTypes = $request->input('Visual Disability', []);
-  $selectedTypes = $request->input('Cancer (RA11215)', []);
-  $selectedTypes = $request->input('Rare Disease (RA10747)', []);
-  // I-update ang uri ng kapansanan batay sa napili na mga checkbox
-  $pwdMember = PwdMember::find($pwdMemberId); // Siguruhin mong ma-load ang tamang PwdMember entry
-
-  $pwdMember->typesDisability()->sync($selectedTypes); // Gamitin ang `sync` para i-update ang relasyon
-
-  // Redirect pabalik sa listahan ng uri ng kapansanan o anumang appropriate na URL
-  // return redirect('/pwd_members')->with('success', 'Uri ng Kapansanan ay na-update nang matagumpay.');
-
-
-
-
-
-
-
-//   // residence
-//   $pwdmember->residence->house_and_street = $request->input('house_and_street');
-//   $pwdmember->residence->purok = $request->input('purok');
-//   $pwdmember->residence->barangay = $request->input('barangay');
-//   $pwdmember->residence->municipality = $request->input('municipality');
-//   $pwdmember->residence->province = $request->input('province');
-//   $pwdmember->residence->region = $request->input('region');
-//   $pwdmember->residence->landline = $request->input('landline');
-//   $pwdmember->residence->mobile_no = $request->input('mobile_no');
-//   $pwdmember->residence->email_add = $request->input('email_add');
-//   $pwdmember->residence->educational_attain = $request->input('educational_attain');
-//   $pwdmember->residence->status_of_employment = $request->input('status_of_employment');
-//   $pwdmember->residence->types_of_employment = $request->input('types_of_employment');
-//   $pwdmember->residence->category_of_employment = $request->input('category_of_employment');
-
-//  // Save the changes
-//  $pwdmember->Residence->save();
-  
-  
-  return redirect()->route('registration.update', $pwdmember->id)->with('message', 'PWD Member Successfully Updated');
-
-
-
-  // dd($request);
    
-    // // Update the Residence model
-    // $pwdmember->residence->update([
-    //     'house_and_street' => $request->input('house_and_street'),
-    //     'purok' => $request->input('purok'),
-    //     'barangay' => $request->input('barangay'),
-    //     'municipality' => $request->input('municipality'),
-    //     'province' => $request->input('province'),
-    //     'region' => $request->input('region'),
-    //     'landline' => $request->input('landline'),
-    //     'mobile_no' => $request->input('mobile_no'),
-    //     'email_add' => $request->input('email_add'),
-    //     'educational_attain' => $request->input('educational_attain'),
-    //     'status_of_employment' => $request->input('status_of_employment'),
-    //     'types_of_employment' => $request->input('types_of_employment'),
-    //     'category_of_employment' => $request->input('category_of_employment'),
-    // ]);
+  // return dd($request);
+    // Find the Pwdmember record by its ID
+    $pwdmember = Pwdmember::findOrFail($id);
 
-    // // Update the Familyback model
-    // $pwdmember->familyback->update([
-    //     'father_last_name' => $request->input('father_last_name'),
-    //     'father_first_name' => $request->input('father_first_name'),
-    //     'father_middle_name' => $request->input('father_middle_name'),
-    //     'suffix_of_father' => $request->input('suffix_of_father'),
-    //     'mother_last_name' => $request->input('mother_last_name'),
-    //     'mother_first_name' => $request->input('mother_first_name'),
-    //     'mother_middle_name' => $request->input('mother_middle_name'),
-    //     'guardian_last_name' => $request->input('guardian_last_name'),
-    //     'guardian_first_name' => $request->input('guardian_first_name'),
-    //     'guardian_middle_name' => $request->input('guardian_middle_name'),
-    //     'suffix_of_guardian' => $request->input('suffix_of_guardian'),
-    //     'sss_no' => $request->input('sss_no'),
-    //     'gsis_no' => $request->input('gsis_no'),
-    //     'pag_ibig_no' => $request->input('pag_ibig_no'),
-    //     'psn_no' => $request->input('psn_no'),
-    //     'philhealth' => $request->input('philhealth'),
-    //     'occupations' => $request->input('occupations'),
-    // ]);
+    // Step 1: Validate and update the Pwdmember data
+    $pwdmemberData = $request->validate([
+      'pwd_no' => 'required',
+      'date_applied' => 'required|date',
+      'application' => 'required',
+      'last_name' => 'required',
+      'first_name' => 'required',
+      'middle_name' => 'required',
+      'suffix_of_applicant' => 'nullable',
+      'birthday' => 'required|date',
+      'gender' => 'required',
+      'status' => 'required',
+      'email_add' => 'nullable|email',
+      'image_path' => 'nullable|image',
+    ]);
 
-    // // Update the Organizationaccomp model
-    // $pwdmember->organizationaccomp->update([
-    //     'organizational_affliated_name' => $request->input('organizational_affliated_name'),
-    //     'contact_person' => $request->input('contact_person'),
-    //     'office_address' => $request->input('office_address'),
-    //     'tel_no' => $request->input('tel_no'),
-    //     'applicant_last_name' => $request->input('applicant_last_name'),
-    //     'applicant_first_name' => $request->input('applicant_first_name'),
-    //     'applicant_middle_name' => $request->input('applicant_middle_name'),
-    //     'suffix_of_applicant' => $request->input('suffix_of_applicant'),
-    //     'guard_last_name' => $request->input('guard_last_name'),
-    //     'guardian_first_name' => $request->input('guardian_first_name'),
-    //     'guardian_middle_name' => $request->input('guardian_middle_name'),
-    //     'guard_middle_name' => $request->input('guard_middle_name'),
-    //     'guardian_suffix' => $request->input('guardian_suffix'),
-    //     'representative_last_name' => $request->input('representative_last_name'),
-    //     'representative_first_name' => $request->input('representative_first_name'),
-    //     'representative_middle_name' => $request->input('representative_middle_name'),
-    //     'representative_suffix' => $request->input('representative_suffix'),
-    // ]);
+    $pwdmember->update($pwdmemberData);
 
-    // // Update the Approvingofficer model
-    // $pwdmember->approvingofficer->update([
-    //     'licensed_no_of_physician' => $request->input('licensed_no_of_physician'),
-    //     'last_name_of_physician' => $request->input('last_name_of_physician'),
-    //     'first_name_of_physician' => $request->input('first_name_of_physician'),
-    //     'middle_name_of_physician' => $request->input('middle_name_of_physician'),
-    //     'suffix_of_physician' => $request->input('suffix_of_physician'),
-    //     'last_name_of_processing_officer' => $request->input('last_name_of_processing_officer'),
-    //     'first_name_of_processing_officer' => $request->input('first_name_of_processing_officer'),
-    //     'middle_name_of_processing_officer' => $request->input('middle_name_of_processing_officer'),
-    //     'suffix_of_processing_officer' => $request->input('suffix_of_processing_officer'),
-    //     'last_name_of_approving_officer' => $request->input('last_name_of_approving_officer'),
-    //     'first_name_of_approving_officer' => $request->input('first_name_of_approving_officer'),
-    //     'middle_name_of_approving_officer' => $request->input('middle_name_of_approving_officer'),
-    //     'suffix_of_approving_officer' => $request->input('suffix_of_approving_officer'),
-    // ]);
+    // Step 2: Update the Residence data
+    $residenceData = $request->only([
+        'house_and_street',
+        'purok',
+        'barangay',
+        'municipality',
+        'province',
+        'region',
+        'landline',
+        'mobile_no',
+        'email_add',
+        'educational_attain',
+        'status_of_employment',
+        'types_of_employment',
+        'category_of_employment',
+    ]);
 
-    // // Update the Approvingsection model
-    // $pwdmember->approvingsection->update([
-    //     'last_name_of_encoder' => $request->input('last_name_of_encoder'),
-    //     'first_name_of_encoder' => $request->input('first_name_of_encoder'),
-    //     'middle_name_of_encoder' => $request->input('middle_name_of_encoder'),
-    //     'suffix_of_encoder' => $request->input('suffix_of_encoder'),
-    //     'last_name_of_reporting_unit' => $request->input('last_name_of_reporting_unit'),
-    //     'first_name_of_reporting_unit' => $request->input('first_name_of_reporting_unit'),
-    //     'middle_name_of_reporting_unit' => $request->input('middle_name_of_reporting_unit'),
-    //     'suffix_of_reporting_unit' => $request->input('suffix_of_reporting_unit'),
-    //     'last_name_of_control_unit' => $request->input('last_name_of_control_unit'),
-    //     'first_name_of_control_unit' => $request->input('first_name_of_control_unit'),
-    //     'middle_name_of_control_unit' => $request->input('middle_name_of_control_unit'),
-    //     'suffix_of_control_unit' => $request->input('suffix_of_control_unit'),
-    // ]);
+    $pwdmember->residence->update($residenceData);
 
-    // // Update the Typesdisability model
-    // $request->validate([
-    //     'types_of_disability' => 'required|array',
-    // ]);
-    // $typesdisability = $pwdmember->typesdisability;
-    // $typesdisability->types_of_disability = json_encode($request->types_of_disability);
-    // $typesdisability->save();
+//     // Step 3: Update the Family Background data
+    $familybackData = $request->only([
+        'father_last_name',
+        'father_first_name',
+        'father_middle_name',
+        'suffix_of_father',
+        'mother_last_name',
+        'mother_first_name',
+        'mother_middle_name',
+        'guardian_last_name',
+        'guardian_first_name',
+        'guardian_middle_name',
+        'suffix_of_guardian',
+        'sss_no',
+        'gsis_no',
+        'pag_ibig_no',
+        'psn_no',
+        'philhealth',
+        'occupations',
+    ]);
 
-    // // Update the Causedisability model
-    // $request->validate([
-    //     'cause_of_disability' => 'required|array',
-    // ]);
-    // $causedisability = $pwdmember->causedisability;
-    // $causedisability->cause_of_disability = json_encode($request->cause_of_disability);
+    $pwdmember->familyback->update($familybackData);
 
-    // // Check if 'Other' is selected and get the 'cause_of_disability_other' input
-    // if (in_array('Other', $request->cause_of_disability)) {
-    //     $causedisability->cause_of_disability_other = $request->input('cause_of_disability_other');
-    // } else {
-    //     $causedisability->cause_of_disability_other = null;
-    // }
+//     // Step 4: Update the Organization Accomplishment data
+    $organizationaccompData = $request->only([
+        'organizational_affliated_name',
+        'contact_person',
+        'office_address',
+        'tel_no',
+        'applicant_last_name',
+        'applicant_first_name',
+        'applicant_middle_name',
+        'suffix_of_applicant',
+        'guardian_last_name',
+        'guardian_first_name',
+        'guardian_middle_name',
+        'guard_middle_name',
+        'guardian_suffix',
+        'representative_last_name',
+        'representative_first_name',
+        'representative_middle_name',
+        'representative_suffix',
+    ]);
 
-    // $causedisability->save();
+    $pwdmember->organizationaccomp->update($organizationaccompData);
 
-    // // Update the Devices model
-    // $request->validate([
-    //     'device_given' => 'required|array',
-    // ]);
-    // $devices = $pwdmember->devices;
-    // $devices->device_given = json_encode($request->device_given);
-    // $devices->save();
+//     // Step 5: Update the Approving Officer data
+    $approvingofficerData = $request->only([
+        'licensed_no_of_physician',
+        'last_name_of_physician',
+        'first_name_of_physician',
+        'middle_name_of_physician',
+        'suffix_of_physician',
+        'last_name_of_processing_officer',
+        'first_name_of_processing_officer',
+        'middle_name_of_processing_officer',
+        'suffix_of_processing_officer',
+        'last_name_of_approving_officer',
+        'first_name_of_approving_officer',
+        'middle_name_of_approving_officer',
+        'suffix_of_approving_officer',
+    ]);
 
-    // Redirect back to the Pwdmember's edit page with a success message
-    // return redirect()->route('registration.update', $pwdmember->id)->with('message', 'PWD Member Successfully Updated');
+    $pwdmember->approvingofficer->update($approvingofficerData);
 
-    }
-    public function destroy(request $request, result $result)
-{
-  return dd($request);
+//     // Step 6: Update the Approving Section data
+    $approvingsectionData = $request->only([
+        'last_name_of_encoder',
+        'first_name_of_encoder',
+        'middle_name_of_encoder',
+        'suffix_of_encoder',
+        'last_name_of_reporting_unit',
+        'first_name_of_reporting_unit',
+        'middle_name_of_reporting_unit',
+        'suffix_of_reporting_unit',
+        'last_name_of_control_unit',
+        'first_name_of_control_unit',
+        'middle_name_of_control_unit',
+        'suffix_of_control_unit',
+    ]);
+
+    $pwdmember->approvingsection->update($approvingsectionData);
+
+
+   // types of disability
+
+  //  dd($request);
   
-     $result->delete();
+            // Validate the request
+            $request->validate([
+              'types_of_disability' => 'required|array',
+            ]);
 
-    // Optionally, you can redirect the user to a page after the delete operation
-    return redirect()->route('profilling.index'); // Replace 'your.route.name' with your desired route
-}
+            // Find the Pwdmember based on the $id
+            $Pwdmember = Pwdmember::findOrFail($id);
 
-// =======================================================================================================================    
-    
-public function PwdMemberExport(Request $request)
-{
-    return Excel::download(new PwdMemberExport, 'PwdMemberExport.xlsx');
-}
+            // Convert the array to JSON
+            $types_of_disability = json_encode($request->types_of_disability);
 
+            // Update the types_of_disability relationship
+            $Pwdmember->typesdisability()->update(['types_of_disability' => $types_of_disability]);
 
+  // // ---------------------------------------------------------------------------------------------------------------------------------------------------
+  
+            // Validate the request
+            $request->validate([
+              'cause_of_disability' => 'required|array',
+            ]);
 
-    
-}
+            // Find the Pwdmember based on the $id
+            $Pwdmember = Pwdmember::findOrFail($id);
+
+            // Convert the array to JSON
+            $cause_of_disability = json_encode($request->cause_of_disability);
+
+            // Update the causedisability relationship
+            $Pwdmember->causedisability()->update(['cause_of_disability' => $cause_of_disability]);
+
+                    
+          
+          // // Step 8: Validate and store Devices (even if it's null
+        
+            $request->validate([
+              'device_given' => 'required|array',
+            ]);
+            
+            // try{
+              $device_given = json_encode($request->device_given);
+              $pwdmember->devices()->update(['device_given' => $device_given]);
+
+            try{
+              // Redirect with success message
+              return redirect()->route('profilling.index')->with('message', 'PWD Member Successfully Updated');
+          } catch (\Exception $e) {
+            // Handle Exceptions and Rollback on Error
+            
+            // DB::rollBack();
+            return back()->withErrors(['error' => 'An error occurred.'])->withInput();
+            }
+                    }
+  
+  // ---------------------------------------------------------------------------------------------------------------------
+  
+  
+
+  
+
+        public function destroy(request $request, result $result)
+        {
+          return dd($request);
+          
+            $result->delete();
+
+            // Optionally, you can redirect the user to a page after the delete operation
+            return redirect()->route('profilling.index'); // Replace 'your.route.name' with your desired route
+        }
+
+        // =======================================================================================================================    
+            
+        // public function PwdMemberExport(Request $request)
+        // {
+        //     return Excel::download(new PwdMemberExport, 'PwdMemberExport.xlsx');
+        // }
+
+            
+    }

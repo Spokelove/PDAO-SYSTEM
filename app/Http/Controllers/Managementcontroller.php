@@ -7,7 +7,12 @@ use Illuminate\Http\Request;
 
 class Managementcontroller extends Controller
 {
+
+  
+   
     public function index ()
+
+        //  dd($request);
     {
         $users = User::all();
 

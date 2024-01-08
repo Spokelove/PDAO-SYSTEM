@@ -17,7 +17,7 @@ protected $table = 'familyback__idrefences'; // Specify the table name if differ
          'father_first_name',
          'father_middle_name',
          'father_last_name',
-         'suffic_of_father',
+         'suffix_of_father',
          'mother_last_name',
          'mother_first_name',
          'mother_middle_name',
@@ -27,7 +27,8 @@ protected $table = 'familyback__idrefences'; // Specify the table name if differ
          'suffix_of_guardian',
          'sss_no',
          'gsis_no',
-         'pag-ibig_no',
+         'pag_ibig_no',
+         'psn_no',
          'philhealth',
          'occupations'
     ];

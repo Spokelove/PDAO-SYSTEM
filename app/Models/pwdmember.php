@@ -49,10 +49,17 @@ protected $table = 'pwd_member'; // Specify the table name if different from the
             return $this->hasOne(ApprovingOfficer::class);
         }
     
+        // public function approvingsection()
+        // {
+        //     return $this->hasOne(ApprovingSection::class);
+        // }
+    
+
         public function approvingsection()
-        {
-            return $this->hasOne(ApprovingSection::class);
-        }
+    {
+        return $this->hasOne(Approvingsection::class, 'pwdmember_id');
+    }
+
     
         public function typesdisability()
         {
@@ -70,7 +77,6 @@ protected $table = 'pwd_member'; // Specify the table name if different from the
         }
     
        
-
         public function setBirthdayAttribute($value)
         {
             $this->attributes['birthday'] = $value;
@@ -78,6 +84,13 @@ protected $table = 'pwd_member'; // Specify the table name if different from the
             $today = new \DateTime('today');
             $this->attributes['age'] = $birthdate->diff($today)->y;
         }
+
+        public function masterledger()
+        {
+            return $this->hasOne(Masterledger::class, 'pwd_member_id');
+        }
+    
+      
     }
     
     

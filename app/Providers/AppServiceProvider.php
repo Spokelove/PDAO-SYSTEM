@@ -29,7 +29,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
     
-       view::share('title','ACCUMULATED BATCH PROCESSING AND INTEGRATED LIST ELECTRONIC DEVELOPMENT SYSTEM');
+       view::share('title','ACCUMULATED BENEFICIARY  LIST AND  ELECTRONIC DEVELOPMENT SYSTEM');
     //     view::composer('students.index', function($view) {
     //         $view->with('students', Students::all());
     // });
